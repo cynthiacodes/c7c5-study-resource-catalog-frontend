@@ -1,7 +1,7 @@
+import { Box, Button, Select, Text } from "@chakra-ui/react";
 import axios from "axios";
-import { baseURL } from "../utilities/baseURL";
 import { useEffect, useState } from "react";
-import { Button, Flex, Select, Text } from "@chakra-ui/react";
+import { baseURL } from "../utilities/baseURL";
 import { ResourceCard } from "./ResourceCard";
 
 interface User {
@@ -40,7 +40,7 @@ export function LandingPage(): JSX.Element {
     }
 
     return (
-        <Flex>
+        <Box w="50%">
             {isSignIn ? (
                 <Text>Current user: {currentUser}</Text>
             ) : (
@@ -62,6 +62,6 @@ export function LandingPage(): JSX.Element {
                 {isSignIn ? "Sign out" : "Sign in"}
             </Button>
             <ResourceCard />
-        </Flex>
+        </Box>
     );
 }
