@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { baseURL } from "../utilities/baseURL";
 import { ResourceCard } from "./ResourceCard";
 import { Resource } from "./Interfaces";
+import { Search } from "./Search";
 
 interface User {
     user_id: number;
@@ -63,36 +64,6 @@ export function LandingPage(): JSX.Element {
         getAllResources();
     }, []);
 
-    const filterResourceBySearchInput = (
-        searchText: string,
-        inputArray: Resource[]
-    ): Resource[] => {
-        const filteredArrayBySearch = inputArray.filter(
-            (eachResource) =>
-                eachResource.resource_name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.author_name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.description
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.tags
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase())
-        );
-        return filteredArrayBySearch;
-    };
-
-    useEffect(() => {
-        const filteredArray: Resource[] = filterResourceBySearchInput(
-            input,
-            allResources
-        );
-        setFilteredResourcesArray(filteredArray);
-    }, [input, allResources]);
-
     return (
         <>
             <Flex w="50%">
@@ -121,10 +92,11 @@ export function LandingPage(): JSX.Element {
                 </Button>
             </Flex>
             <>
-                <Input
-                    placeholder="Find a resource"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                <Search
+                    setFilteredResourcesArray={setFilteredResourcesArray}
+                    input={input}
+                    setInput={setInput}
+                    allResources={allResources}
                 />
                 {input.length === 0 ? (
                     <ResourceCard allResources={allResources} />
