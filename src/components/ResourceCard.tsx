@@ -5,6 +5,7 @@ import {
     CardFooter,
     Divider,
     Heading,
+    SimpleGrid,
     Stack,
     Text,
 } from "@chakra-ui/react";
@@ -46,26 +47,30 @@ export function ResourceCard(): JSX.Element {
     }, []);
 
     const resourcesSummary = allResources.map((resource) => (
-        <Card maxW="sm" key={resource.resources_id}>
-            <CardBody>
-                <Stack mt="6" spacing="3">
-                    <Heading size="md">{resource.resource_name}</Heading>
-                    <Text>{resource.author_name}</Text>
-                    <Text>{resource.description}</Text>
-                    <Text color="blue.600">{resource.recommended_stage}</Text>
-                </Stack>
-            </CardBody>
-            <Divider />
-            <CardFooter>
-                <Button
-                    variant="solid"
-                    colorScheme="blue"
-                    onClick={() => handleViewMore(resource)}
-                >
-                    See more
-                </Button>
-            </CardFooter>
-        </Card>
+        <>
+            <Card maxW="sm" key={resource.resources_id}>
+                <CardBody>
+                    <Stack mt="6" spacing="3">
+                        <Heading size="md">{resource.resource_name}</Heading>
+                        <Text>{resource.author_name}</Text>
+                        <Text>{resource.description}</Text>
+                        <Text color="blue.600">
+                            {resource.recommended_stage}
+                        </Text>
+                    </Stack>
+                </CardBody>
+                <Divider />
+                <CardFooter>
+                    <Button
+                        variant="solid"
+                        colorScheme="blue"
+                        onClick={() => handleViewMore(resource)}
+                    >
+                        See more
+                    </Button>
+                </CardFooter>
+            </Card>
+        </>
     ));
 
     const handleViewMore = (resource: Resource) => {
@@ -78,7 +83,12 @@ export function ResourceCard(): JSX.Element {
 
     return (
         <>
-            {resourcesSummary}
+            <SimpleGrid
+                spacing={4}
+                templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+            >
+                {resourcesSummary}
+            </SimpleGrid>
             {singleResource && (
                 <Card maxW="sm">
                     <CardBody>
