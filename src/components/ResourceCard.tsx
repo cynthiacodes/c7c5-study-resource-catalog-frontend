@@ -9,9 +9,7 @@ import {
     Stack,
     Text,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { baseURL } from "../utilities/baseURL";
+import { useState } from "react";
 import { Resource } from "./Interfaces";
 
 interface ResourceCardViewProps {

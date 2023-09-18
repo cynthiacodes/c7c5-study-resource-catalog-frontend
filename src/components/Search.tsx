@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { Button, Input } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { filterResourceBySearchInput } from "../utilities/filterResultsBySearchText";
 import { Resource } from "./Interfaces";
-import { Button, Input, Tag } from "@chakra-ui/react";
 
 interface searchViewProps {
     setFilteredResourcesArray: React.Dispatch<React.SetStateAction<Resource[]>>;
@@ -44,13 +44,6 @@ export function Search({
     const handleFilterTags = (tag: string) => {
         setInput(tag);
     };
-
-    function filterResourceByTag(inputArray: Resource[], tag: string) {
-        const filteredArrayByTag = inputArray.filter((eachResource) =>
-            eachResource.tags.includes(tag)
-        );
-        return filteredArrayByTag;
-    }
 
     const tagFilters = createTag(allResources);
 
