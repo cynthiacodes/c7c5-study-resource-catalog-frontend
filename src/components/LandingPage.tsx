@@ -1,10 +1,11 @@
-import { Button, Flex, Input, Select, Text } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Flex, Select, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { baseURL } from "../utilities/baseURL";
-import { ResourceCard } from "./ResourceCard";
+import { fetchAllResources } from "../utilities/fetchAllResources";
+import { fetchAllUsers } from "../utilities/fetchAllUsers";
 import { Resource } from "./Interfaces";
+import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
+import { Link } from "react-router-dom";
 
 interface User {
     user_id: number;
@@ -16,26 +17,14 @@ export function LandingPage(): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
     const [currentUser, setCurrentUser] = useState("");
     const [isSignIn, setIsSignIn] = useState(false);
-
     const [allResources, setAllResources] = useState<Resource[]>([]);
-
     const [input, setInput] = useState<string>("");
     const [filteredResourcesArray, setFilteredResourcesArray] = useState<
         Resource[]
     >([]);
 
-    const getAllUsers = async () => {
-        try {
-            const response = await axios.get(`${baseURL}users`);
-            const usersList = response.data;
-            setUsers(usersList);
-        } catch (error) {
-            console.error("error", error);
-        }
-    };
-
     useEffect(() => {
-        getAllUsers();
+        fetchAllUsers().then((allUsers) => setUsers(allUsers));
     }, []);
 
     function handleSelectedUser(event: React.ChangeEvent<HTMLSelectElement>) {
@@ -48,20 +37,11 @@ export function LandingPage(): JSX.Element {
             setCurrentUser("");
         }
     }
-    const getAllResources = async () => {
-        try {
-            const response = await axios.get(`${baseURL}resources`);
-            const resourceList = response.data;
-            setAllResources(resourceList);
-            console.log("resource list", resourceList);
-            console.log("all resources state", allResources);
-        } catch (error) {
-            console.error("error", error);
-        }
-    };
 
     useEffect(() => {
-        getAllResources();
+        fetchAllResources().then((allResources) =>
+            setAllResources(allResources)
+        );
     }, []);
 
     return (
@@ -90,6 +70,11 @@ export function LandingPage(): JSX.Element {
                 >
                     {isSignIn ? "Sign out" : "Sign in"}
                 </Button>
+                {isSignIn && (
+                    <Button>
+                        <Link to="/newresource">Add new resource</Link>
+                    </Button>
+                )}
             </Flex>
             <>
                 <Search
