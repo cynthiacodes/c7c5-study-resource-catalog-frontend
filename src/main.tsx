@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./components/App";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { NewResource } from "./components/NewResource";
+import { AddNewResource } from "./components/AddNewResource";
 
 const router = createBrowserRouter([
     {
@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/newresource",
-        element: <NewResource />,
+        element: <AddNewResource />,
     },
 ]);
 
