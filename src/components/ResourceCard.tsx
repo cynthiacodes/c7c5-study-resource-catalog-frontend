@@ -12,39 +12,16 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { baseURL } from "../utilities/baseURL";
+import { Resource } from "./Interfaces";
 
-interface Resource {
-    resources_id: number;
-    resource_name: string;
-    author_name: string;
-    url: string;
-    description: string;
-    tags: string;
-    content_type: string;
-    recommended_stage: string;
-    date_created: string;
-    user_id: number;
-    creator_opinion: string;
-    creator_reason: string;
+interface ResourceCardViewProps {
+    allResources: Resource[];
 }
-export function ResourceCard(): JSX.Element {
-    const [allResources, setAllResources] = useState<Resource[]>([]);
-    const [singleResource, setSingleResource] = useState<Resource | null>();
-    const getAllResources = async () => {
-        try {
-            const response = await axios.get(`${baseURL}resources`);
-            const resourceList = response.data;
-            setAllResources(resourceList);
-            console.log("resource list", resourceList);
-            console.log("all resources state", allResources);
-        } catch (error) {
-            console.error("error", error);
-        }
-    };
 
-    useEffect(() => {
-        getAllResources();
-    }, []);
+export function ResourceCard({
+    allResources,
+}: ResourceCardViewProps): JSX.Element {
+    const [singleResource, setSingleResource] = useState<Resource | null>();
 
     const resourcesSummary = allResources.map((resource) => (
         <>
