@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { filterResourceBySearchInput } from "../utilities/filterResultsBySearchText";
 import { Resource } from "./Interfaces";
-import { Button, Input } from "@chakra-ui/react";
+import { Button, Input, Tag } from "@chakra-ui/react";
 
 interface searchViewProps {
     setFilteredResourcesArray: React.Dispatch<React.SetStateAction<Resource[]>>;
@@ -9,22 +9,6 @@ interface searchViewProps {
     input: string;
     allResources: Resource[];
 }
-
-const tagCategories = [
-    "PostgreSQL",
-    "React",
-    "Frontend",
-    "Backend",
-    "TypeScript",
-    "JavaScript",
-    "GitHub",
-    "Express.js",
-    "CSS",
-    "HTML",
-    "Jest",
-    "CI/CD",
-    "Node.js",
-];
 
 export function Search({
     setFilteredResourcesArray,
@@ -40,15 +24,44 @@ export function Search({
         setFilteredResourcesArray(filteredArray);
     }, [input, allResources, setFilteredResourcesArray]);
 
-    const tagFilters = tagCategories.map((tag) => <Button>{tag}</Button>);
+    function createTag(resources: Resource[]) {
+        const cloudOfTags: string[] = [];
+
+        for (const resource of resources) {
+            const tag: string = resource.tags;
+
+            if (!cloudOfTags.includes(tag)) {
+                cloudOfTags.push(resource.tags);
+            }
+        }
+        return cloudOfTags.map((tag, index) => (
+            <Button key={index} onClick={() => handleFilterTags(tag)}>
+                {tag}
+            </Button>
+        ));
+    }
+
+    const handleFilterTags = (tag: string) => {
+        setInput(tag);
+    };
+
+    function filterResourceByTag(inputArray: Resource[], tag: string) {
+        const filteredArrayByTag = inputArray.filter((eachResource) =>
+            eachResource.tags.includes(tag)
+        );
+        return filteredArrayByTag;
+    }
+
+    const tagFilters = createTag(allResources);
+
     return (
         <>
-            {tagFilters}
             <Input
                 placeholder="Find a resource"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
             />
+            {tagFilters}
         </>
     );
 }
