@@ -6,16 +6,12 @@ import { Resource } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
 import { Link } from "react-router-dom";
-
-interface User {
-    user_id: number;
-    name: string;
-    is_faculty: boolean;
-}
+import { AddNewResource } from "./AddNewResource";
+import { User } from "./Interfaces";
 
 export function LandingPage(): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
-    const [currentUser, setCurrentUser] = useState("");
+    const [currentUser, setCurrentUser] = useState<User | null>();
     const [isSignIn, setIsSignIn] = useState(false);
     const [allResources, setAllResources] = useState<Resource[]>([]);
     const [input, setInput] = useState<string>("");
@@ -28,13 +24,17 @@ export function LandingPage(): JSX.Element {
     }, []);
 
     function handleSelectedUser(event: React.ChangeEvent<HTMLSelectElement>) {
-        setCurrentUser(event.target.value);
+        const currentUserName = event.target.value;
+        const currentUserObject = users.find(
+            (user) => user.name === currentUserName
+        );
+        setCurrentUser(currentUserObject);
     }
 
     function handleSignInAndOut() {
         setIsSignIn(!isSignIn);
         if (isSignIn) {
-            setCurrentUser("");
+            setCurrentUser(null);
         }
     }
 
@@ -48,7 +48,7 @@ export function LandingPage(): JSX.Element {
         <>
             <Flex w="50%">
                 {isSignIn ? (
-                    <Text>Current user: {currentUser}</Text>
+                    <Text>Current user: {currentUser && currentUser.name}</Text>
                 ) : (
                     <Select
                         placeholder="select user"
@@ -66,7 +66,7 @@ export function LandingPage(): JSX.Element {
 
                 <Button
                     onClick={handleSignInAndOut}
-                    isDisabled={currentUser.length === 0}
+                    isDisabled={currentUser === null}
                 >
                     {isSignIn ? "Sign out" : "Sign in"}
                 </Button>
@@ -83,6 +83,9 @@ export function LandingPage(): JSX.Element {
                     setInput={setInput}
                     allResources={allResources}
                 />
+
+                <AddNewResource currentUser={currentUser} />
+
                 {input.length === 0 ? (
                     <ResourceCard allResources={allResources} />
                 ) : (
