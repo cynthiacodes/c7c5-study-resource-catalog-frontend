@@ -1,8 +1,7 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 import { baseURL } from "../utilities/baseURL";
-import axios from "axios";
-import { number } from "prop-types";
 import { User } from "./Interfaces";
 
 export interface NewResource {
@@ -13,7 +12,7 @@ export interface NewResource {
     tags: string;
     content_type: string;
     recommended_stage: string;
-    user_id: number;
+    user_id: number | undefined;
     creator_opinion: string;
     creator_reason: string;
 }
@@ -21,19 +20,29 @@ export interface NewResource {
 interface currentUserProps {
     currentUser: User | null | undefined;
 }
+const tagsArray: string[] = [
+    "PostgreSQL",
+    "React",
+    "Frontend",
+    "Backend",
+    "TypeScript",
+    "JavaScript",
+    "GitHub",
+    "Express.js",
+    "CSS",
+    "HTML",
+    "Jest",
+    "CI/CD",
+    "Node.js",
+];
+
+const creatorReasonsArray: string[] = [
+    "I recommend this resource after having used it",
+    "I do not recommend this resource, having used it",
+    "I haven't used this resource but it looks promising",
+];
 
 export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
-    const [resourceName, setResourceName] = useState("");
-    const [authorName, setAuthorName] = useState("");
-    const [url, setUrl] = useState("");
-    const [description, setDescription] = useState("");
-    const [tag, setTag] = useState("");
-    const [contentType, setContentType] = useState("");
-    const [recommendedStage, setRecommendedStage] = useState("");
-    const [userId, setUserId] = useState<number>();
-    const [creatorOpinion, setCreatorOpinion] = useState("");
-    const [creatorReason, setCreatorReason] = useState("");
-
     const [resourceData, setResourceData] = useState<NewResource>({
         resource_name: "",
         author_name: "",
@@ -49,6 +58,34 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        try {
+            const response = await axios.post(
+                `${baseURL}resources`,
+                resourceData
+            );
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    function handleResourceInput(e: React.ChangeEvent<HTMLInputElement>) {
+        const value = e.target.value;
+
+        setResourceData({
+            ...resourceData,
+
+            [e.target.name]: value,
+        });
+        console.log("resourceData", resourceData);
+    }
+    function handleResourceSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+        const value = e.target.value;
+
+        setResourceData({
+            ...resourceData,
+
+            [e.target.name]: value,
+        });
     }
 
     return (
@@ -57,72 +94,77 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
                 <FormLabel>Resource Name:</FormLabel>
                 <Input
                     placeholder="Type here..."
-                    value={resourceData?.author_name}
-                    onChange={(e) => {
-                        setResourceName(e.target.value);
-                    }}
+                    name="resource_name"
+                    value={resourceData.resource_name}
+                    onChange={handleResourceInput}
                 />
                 <FormLabel>Author Name:</FormLabel>
                 <Input
-                    value={authorName}
-                    onChange={(e) => {
-                        setAuthorName(e.target.value);
-                    }}
+                    name="author_name"
+                    value={resourceData.author_name}
+                    onChange={handleResourceInput}
                 />
 
                 <FormLabel>URL:</FormLabel>
                 <Input
-                    value={url}
-                    onChange={(e) => {
-                        setUrl(e.target.value);
-                    }}
+                    name="url"
+                    value={resourceData.url}
+                    onChange={handleResourceInput}
                 />
                 <FormLabel>Description:</FormLabel>
                 <Input
-                    value={description}
-                    onChange={(e) => {
-                        setDescription(e.target.value);
-                    }}
+                    name="description"
+                    value={resourceData.description}
+                    onChange={handleResourceInput}
                 />
 
-                {/* dropdown */}
                 <FormLabel>Tag:</FormLabel>
-                <Input
-                    value={tag}
-                    onChange={(e) => {
-                        setTag(e.target.value);
-                    }}
-                />
+
+                <Select
+                    name="tags"
+                    value={resourceData.tags}
+                    onChange={handleResourceSelect}
+                    placeholder="select tag"
+                >
+                    {tagsArray.map((tag, index) => (
+                        <option value={tag} key={index}>
+                            {tag}
+                        </option>
+                    ))}
+                </Select>
                 <FormLabel>Content Type:</FormLabel>
                 <Input
-                    value={contentType}
-                    onChange={(e) => {
-                        setContentType(e.target.value);
-                    }}
+                    name="content_type"
+                    value={resourceData.content_type}
+                    onChange={handleResourceInput}
                 />
                 <FormLabel>Recommended Stage:</FormLabel>
                 <Input
-                    value={recommendedStage}
-                    onChange={(e) => {
-                        setRecommendedStage(e.target.value);
-                    }}
+                    name="recommended_stage"
+                    value={resourceData.recommended_stage}
+                    onChange={handleResourceInput}
                 />
                 <FormLabel>Your Opinion:</FormLabel>
 
-                {/* dropdown */}
-                <Input
-                    value={creatorOpinion}
-                    onChange={(e) => {
-                        setCreatorOpinion(e.target.value);
-                    }}
-                />
+                <Select
+                    name="creator_opinion"
+                    value={resourceData.creator_opinion}
+                    onChange={handleResourceSelect}
+                    placeholder="select opinion"
+                >
+                    {creatorReasonsArray.map((opinion, index) => (
+                        <option value={opinion} key={index}>
+                            {opinion}
+                        </option>
+                    ))}
+                </Select>
+
                 <FormLabel> Reason:</FormLabel>
 
                 <Input
-                    value={creatorReason}
-                    onChange={(e) => {
-                        setCreatorReason(e.target.value);
-                    }}
+                    name="creator_reason"
+                    value={resourceData.creator_reason}
+                    onChange={handleResourceInput}
                 />
             </FormControl>
         </form>
