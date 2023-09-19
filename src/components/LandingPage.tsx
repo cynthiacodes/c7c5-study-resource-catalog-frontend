@@ -1,13 +1,12 @@
 import { Button, Flex, Select, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { fetchAllResources } from "../utilities/fetchAllResources";
 import { fetchAllUsers } from "../utilities/fetchAllUsers";
-import { Resource } from "./Interfaces";
+import { AddNewResource } from "./AddNewResource";
+import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
-import { Link } from "react-router-dom";
-import { AddNewResource } from "./AddNewResource";
-import { User } from "./Interfaces";
 
 export function LandingPage(): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
