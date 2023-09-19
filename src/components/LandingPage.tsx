@@ -83,13 +83,12 @@ export function LandingPage(): JSX.Element {
                     allResources={allResources}
                 />
 
-                <AddNewResource currentUser={currentUser} />
-
                 {input.length === 0 ? (
                     <ResourceCard allResources={allResources} />
                 ) : (
                     <ResourceCard allResources={filteredResourcesArray} />
                 )}
+                <AddNewResource currentUser={currentUser} />
             </>
         </>
     );
