@@ -1,5 +1,6 @@
 import {
     Button,
+    ButtonGroup,
     Card,
     CardBody,
     CardFooter,
@@ -10,14 +11,20 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Resource } from "./Interfaces";
+import { Resource, User } from "./Interfaces";
+import { baseURL } from "../utilities/baseURL";
+import axios from "axios";
 
 interface ResourceCardViewProps {
     allResources: Resource[];
+    isSignIn: boolean;
+    currentUser: User | null | undefined;
 }
 
 export function ResourceCard({
     allResources,
+    isSignIn,
+    currentUser,
 }: ResourceCardViewProps): JSX.Element {
     const [singleResource, setSingleResource] = useState<Resource | null>();
 
@@ -56,6 +63,38 @@ export function ResourceCard({
         setSingleResource(null);
     };
 
+    const handleLikeDislike = async (likeOrDislike: string) => {
+        if (likeOrDislike === "like") {
+            try {
+                const likeData = {
+                    user_id: currentUser?.user_id,
+                    resource_id: singleResource?.resources_id,
+                };
+                const response = await axios.put(
+                    `${baseURL}opinions/like`,
+                    likeData
+                );
+                console.log("like", response);
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            try {
+                const dislikeData = {
+                    user_id: currentUser?.user_id,
+                    resource_id: singleResource?.resources_id,
+                };
+                const response = await axios.put(
+                    `${baseURL}opinions/dislike`,
+                    dislikeData
+                );
+                console.log("dislike", response);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+
     return (
         <>
             <SimpleGrid
@@ -88,6 +127,20 @@ export function ResourceCard({
                         >
                             Close Full View
                         </Button>
+                        {isSignIn && (
+                            <ButtonGroup>
+                                <Button
+                                    onClick={() => handleLikeDislike("like")}
+                                >
+                                    Like
+                                </Button>
+                                <Button
+                                    onClick={() => handleLikeDislike("dislike")}
+                                >
+                                    Dislike
+                                </Button>
+                            </ButtonGroup>
+                        )}
                     </CardFooter>
                 </Card>
             )}

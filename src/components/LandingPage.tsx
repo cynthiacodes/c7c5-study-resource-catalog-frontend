@@ -19,7 +19,6 @@ export function LandingPage({
     setCurrentUser,
 }: LandingPageViewProp): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
-
     const [isSignIn, setIsSignIn] = useState(false);
     const [allResources, setAllResources] = useState<Resource[]>([]);
     const [input, setInput] = useState<string>("");
@@ -93,9 +92,17 @@ export function LandingPage({
                 />
 
                 {input.length === 0 ? (
-                    <ResourceCard allResources={allResources} />
+                    <ResourceCard
+                        allResources={allResources}
+                        isSignIn={isSignIn}
+                        currentUser={currentUser}
+                    />
                 ) : (
-                    <ResourceCard allResources={filteredResourcesArray} />
+                    <ResourceCard
+                        allResources={filteredResourcesArray}
+                        isSignIn={isSignIn}
+                        currentUser={currentUser}
+                    />
                 )}
             </>
         </>
