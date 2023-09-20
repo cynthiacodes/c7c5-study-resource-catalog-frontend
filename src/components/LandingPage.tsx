@@ -3,14 +3,23 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchAllResources } from "../utilities/fetchAllResources";
 import { fetchAllUsers } from "../utilities/fetchAllUsers";
-import { AddNewResource } from "./AddNewResource";
 import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
 
-export function LandingPage(): JSX.Element {
+interface LandingPageViewProp {
+    currentUser: User | null | undefined;
+    setCurrentUser: React.Dispatch<
+        React.SetStateAction<User | null | undefined>
+    >;
+}
+
+export function LandingPage({
+    currentUser,
+    setCurrentUser,
+}: LandingPageViewProp): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
-    const [currentUser, setCurrentUser] = useState<User | null>();
+
     const [isSignIn, setIsSignIn] = useState(false);
     const [allResources, setAllResources] = useState<Resource[]>([]);
     const [input, setInput] = useState<string>("");
@@ -88,7 +97,6 @@ export function LandingPage(): JSX.Element {
                 ) : (
                     <ResourceCard allResources={filteredResourcesArray} />
                 )}
-                <AddNewResource currentUser={currentUser} />
             </>
         </>
     );
