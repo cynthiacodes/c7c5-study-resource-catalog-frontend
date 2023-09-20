@@ -12,3 +12,9 @@ export interface Resource {
     creator_opinion: string;
     creator_reason: string;
 }
+
+export interface User {
+    user_id: number;
+    name: string;
+    is_faculty: boolean;
+}

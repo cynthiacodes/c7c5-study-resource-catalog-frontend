@@ -1,103 +1,62 @@
-import { Button, Flex, Input, Select, Text } from "@chakra-ui/react";
-import axios from "axios";
+import { Button, Flex, Select, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { baseURL } from "../utilities/baseURL";
+import { Link } from "react-router-dom";
+import { fetchAllResources } from "../utilities/fetchAllResources";
+import { fetchAllUsers } from "../utilities/fetchAllUsers";
+import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
-import { Resource } from "./Interfaces";
+import { Search } from "./Search";
 
-interface User {
-    user_id: number;
-    name: string;
-    is_faculty: boolean;
+interface LandingPageViewProp {
+    currentUser: User | null | undefined;
+    setCurrentUser: React.Dispatch<
+        React.SetStateAction<User | null | undefined>
+    >;
 }
 
-export function LandingPage(): JSX.Element {
+export function LandingPage({
+    currentUser,
+    setCurrentUser,
+}: LandingPageViewProp): JSX.Element {
     const [users, setUsers] = useState<User[]>([]);
-    const [currentUser, setCurrentUser] = useState("");
+
     const [isSignIn, setIsSignIn] = useState(false);
-
     const [allResources, setAllResources] = useState<Resource[]>([]);
-
     const [input, setInput] = useState<string>("");
     const [filteredResourcesArray, setFilteredResourcesArray] = useState<
         Resource[]
     >([]);
 
-    const getAllUsers = async () => {
-        try {
-            const response = await axios.get(`${baseURL}users`);
-            const usersList = response.data;
-            setUsers(usersList);
-        } catch (error) {
-            console.error("error", error);
-        }
-    };
-
     useEffect(() => {
-        getAllUsers();
+        fetchAllUsers().then((allUsers) => setUsers(allUsers));
     }, []);
 
     function handleSelectedUser(event: React.ChangeEvent<HTMLSelectElement>) {
-        setCurrentUser(event.target.value);
+        const currentUserName = event.target.value;
+        const currentUserObject = users.find(
+            (user) => user.name === currentUserName
+        );
+        setCurrentUser(currentUserObject);
     }
 
     function handleSignInAndOut() {
         setIsSignIn(!isSignIn);
         if (isSignIn) {
-            setCurrentUser("");
+            setCurrentUser(null);
         }
     }
-    const getAllResources = async () => {
-        try {
-            const response = await axios.get(`${baseURL}resources`);
-            const resourceList = response.data;
-            setAllResources(resourceList);
-            console.log("resource list", resourceList);
-            console.log("all resources state", allResources);
-        } catch (error) {
-            console.error("error", error);
-        }
-    };
 
     useEffect(() => {
-        getAllResources();
+        fetchAllResources().then((allResources) =>
+            setAllResources(allResources)
+        );
     }, []);
-
-    const filterResourceBySearchInput = (
-        searchText: string,
-        inputArray: Resource[]
-    ): Resource[] => {
-        const filteredArrayBySearch = inputArray.filter(
-            (eachResource) =>
-                eachResource.resource_name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.author_name
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.description
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase()) ||
-                eachResource.tags
-                    .toLowerCase()
-                    .includes(searchText.toLowerCase())
-        );
-        return filteredArrayBySearch;
-    };
-
-    useEffect(() => {
-        const filteredArray: Resource[] = filterResourceBySearchInput(
-            input,
-            allResources
-        );
-        setFilteredResourcesArray(filteredArray);
-    }, [input, allResources]);
 
     return (
         <>
             <Flex w="50%">
                 {isSignIn ? (
-                    <Text>Current user: {currentUser}</Text>
+                    <Text>Current user: {currentUser && currentUser.name}</Text>
                 ) : (
                     <Select
                         placeholder="select user"
@@ -115,17 +74,24 @@ export function LandingPage(): JSX.Element {
 
                 <Button
                     onClick={handleSignInAndOut}
-                    isDisabled={currentUser.length === 0}
+                    isDisabled={currentUser === null}
                 >
                     {isSignIn ? "Sign out" : "Sign in"}
                 </Button>
+                {isSignIn && (
+                    <Button>
+                        <Link to="/newresource">Add new resource</Link>
+                    </Button>
+                )}
             </Flex>
             <>
-                <Input
-                    placeholder="Find a resource"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                <Search
+                    setFilteredResourcesArray={setFilteredResourcesArray}
+                    input={input}
+                    setInput={setInput}
+                    allResources={allResources}
                 />
+
                 {input.length === 0 ? (
                     <ResourceCard allResources={allResources} />
                 ) : (
