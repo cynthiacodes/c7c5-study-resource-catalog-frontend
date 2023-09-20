@@ -1,8 +1,15 @@
-import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import {
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    Select,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
 import { baseURL } from "../utilities/baseURL";
 import { User } from "./Interfaces";
+import { Link } from "react-router-dom";
 
 export interface NewResource {
     resource_name: string;
@@ -90,19 +97,23 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
 
     return (
         <form onSubmit={handleSubmit}>
-            <FormControl>
+            <FormControl isRequired>
                 <FormLabel>Resource Name:</FormLabel>
                 <Input
                     placeholder="Type here..."
                     name="resource_name"
                     value={resourceData.resource_name}
                     onChange={handleResourceInput}
+                    maxLength={100}
+                    type="text"
                 />
                 <FormLabel>Author Name:</FormLabel>
                 <Input
                     name="author_name"
                     value={resourceData.author_name}
                     onChange={handleResourceInput}
+                    maxLength={50}
+                    type="text"
                 />
 
                 <FormLabel>URL:</FormLabel>
@@ -110,6 +121,8 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
                     name="url"
                     value={resourceData.url}
                     onChange={handleResourceInput}
+                    type="url"
+                    maxLength={255}
                 />
                 <FormLabel>Description:</FormLabel>
                 <Input
@@ -166,6 +179,10 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
                     value={resourceData.creator_reason}
                     onChange={handleResourceInput}
                 />
+                <Button type="submit">Submit</Button>
+                <Button>
+                    <Link to="/">Cancel</Link>
+                </Button>
             </FormControl>
         </form>
     );
