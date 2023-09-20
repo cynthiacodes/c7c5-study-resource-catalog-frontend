@@ -170,16 +170,3 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
         </form>
     );
 }
-
-/*
-resource_name,
-            author_name,
-            url,
-            description,
-            tags,
-            content_type,
-            recommended_stage,
-            user_id,
-            creator_opinion,
-            creator_reason,
-*/
