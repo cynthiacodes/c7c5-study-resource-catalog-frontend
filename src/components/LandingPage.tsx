@@ -1,4 +1,11 @@
-import { Button, Flex, Select, Text } from "@chakra-ui/react";
+import {
+    Button,
+    Container,
+    Flex,
+    Select,
+    Spacer,
+    Text,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchAllResources } from "../utilities/fetchAllResources";
@@ -52,38 +59,58 @@ export function LandingPage({
     }, []);
 
     return (
-        <>
-            <Flex w="50%">
-                {isSignIn ? (
-                    <Text>Current user: {currentUser && currentUser.name}</Text>
-                ) : (
-                    <Select
-                        placeholder="select user"
-                        onChange={(event) => {
-                            handleSelectedUser(event);
-                        }}
-                    >
-                        {users.map((user) => {
-                            return (
-                                <option key={user.user_id}>{user.name}</option>
-                            );
-                        })}
-                    </Select>
-                )}
+        <Container
+            bg={"#FFFEFD"}
+            minHeight={"100vh"}
+            minWidth={"100vw"}
+            pb={"5rem"}
+        >
+            <Container minWidth={"80%"} pb={"5rem"}>
+                <Flex alignItems="center" pt="1em">
+                    <Spacer />
+                    {isSignIn ? (
+                        <Text fontSize="2xl">
+                            Current user:{" "}
+                            <Text as="b">
+                                {currentUser && currentUser.name}
+                            </Text>
+                        </Text>
+                    ) : (
+                        <Select
+                            w={"30%"}
+                            placeholder="select user"
+                            onChange={(event) => {
+                                handleSelectedUser(event);
+                            }}
+                        >
+                            {users.map((user) => {
+                                return (
+                                    <option key={user.user_id}>
+                                        {user.name}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                    )}
 
-                <Button
-                    onClick={handleSignInAndOut}
-                    isDisabled={currentUser === null}
-                >
-                    {isSignIn ? "Sign out" : "Sign in"}
-                </Button>
-                {isSignIn && (
-                    <Button>
-                        <Link to="/newresource">Add new resource</Link>
+                    <Button
+                        ml="1em"
+                        onClick={handleSignInAndOut}
+                        isDisabled={
+                            currentUser === null || currentUser === undefined
+                        }
+                    >
+                        {isSignIn ? "Sign out" : "Sign in"}
                     </Button>
-                )}
-            </Flex>
-            <>
+                </Flex>
+                <Flex alignItems="center" pt="1em">
+                    <Spacer />
+                    {isSignIn && (
+                        <Button>
+                            <Link to="/newresource">Add new resource</Link>
+                        </Button>
+                    )}
+                </Flex>
                 <Search
                     setFilteredResourcesArray={setFilteredResourcesArray}
                     input={input}
@@ -91,20 +118,26 @@ export function LandingPage({
                     allResources={allResources}
                 />
 
+                {input.length > 0 && filteredResourcesArray.length === 0 && (
+                    <Text fontSize={"2xl"}>No Result Found</Text>
+                )}
+
                 {input.length === 0 ? (
                     <ResourceCard
                         allResources={allResources}
                         isSignIn={isSignIn}
                         currentUser={currentUser}
+                        users={users}
                     />
                 ) : (
                     <ResourceCard
                         allResources={filteredResourcesArray}
                         isSignIn={isSignIn}
                         currentUser={currentUser}
+                        users={users}
                     />
                 )}
-            </>
-        </>
+            </Container>
+        </Container>
     );
 }

@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Card,
     CardBody,
@@ -17,12 +18,14 @@ interface ResourceCardViewProps {
     allResources: Resource[];
     isSignIn: boolean;
     currentUser: User | null | undefined;
+    users: User[];
 }
 
 export function ResourceCard({
     allResources,
     isSignIn,
     currentUser,
+    users,
 }: ResourceCardViewProps): JSX.Element {
     const [singleResource, setSingleResource] = useState<Resource | null>();
 
@@ -31,7 +34,7 @@ export function ResourceCard({
     };
 
     return (
-        <>
+        <Box>
             <SimpleGrid
                 spacing={4}
                 templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
@@ -45,7 +48,7 @@ export function ResourceCard({
                                 </Heading>
                                 <Text>{resource.author_name}</Text>
                                 <Text>{resource.description}</Text>
-                                <Text color="blue.600">
+                                <Text color="yellow.700">
                                     {resource.recommended_stage}
                                 </Text>
                             </Stack>
@@ -53,8 +56,8 @@ export function ResourceCard({
                         <Divider />
                         <CardFooter>
                             <Button
-                                variant="solid"
-                                colorScheme="blue"
+                                variant="outline"
+                                colorScheme="yellow"
                                 onClick={() => handleViewMore(resource)}
                             >
                                 See more
@@ -69,8 +72,9 @@ export function ResourceCard({
                     isSignIn={isSignIn}
                     setSingleResource={setSingleResource}
                     currentUser={currentUser}
+                    users={users}
                 />
             )}
-        </>
+        </Box>
     );
 }

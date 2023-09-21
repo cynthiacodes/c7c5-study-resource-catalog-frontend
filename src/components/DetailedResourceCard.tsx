@@ -20,6 +20,7 @@ interface DetailedResourceCardViewProps {
         React.SetStateAction<Resource | null | undefined>
     >;
     currentUser: User | null | undefined;
+    users: User[];
 }
 
 export function DetailedResourceCard({
@@ -27,6 +28,7 @@ export function DetailedResourceCard({
     isSignIn,
     setSingleResource,
     currentUser,
+    users,
 }: DetailedResourceCardViewProps): JSX.Element {
     const handleCloseView = () => {
         setSingleResource(null);
@@ -64,38 +66,63 @@ export function DetailedResourceCard({
             }
         }
     };
+
+    function getCreatorName(user_id: number | undefined): string | undefined {
+        const creator = users.find((user) => user.user_id === user_id);
+        return creator?.name;
+    }
     return (
-        <Card maxW="sm">
+        <Card maxW="sm" m={"5rem auto"}>
             <CardBody>
                 <Stack mt="6" spacing="3">
-                    <Heading size="md">{singleResource?.resource_name}</Heading>
-                    <Text> Full View Resources Card</Text>
+                    <Heading size="md">
+                        <a
+                            href={singleResource?.url}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            {singleResource?.resource_name}
+                        </a>
+                    </Heading>
                     <Text>{singleResource?.author_name}</Text>
                     <Text>{singleResource?.description}</Text>
-                    <Text color="blue.600">
+                    <Text color="yellow.700">
                         {singleResource?.recommended_stage}
+                    </Text>
+                    <Text>
+                        Creator: {getCreatorName(singleResource?.user_id)}
+                    </Text>
+                    <Text>
+                        Creator_opinion: {singleResource?.creator_opinion}
+                    </Text>
+                    <Text>
+                        Creator_reason: {singleResource?.creator_reason}
                     </Text>
                 </Stack>
             </CardBody>
             <Divider />
             <CardFooter>
-                <Button
-                    variant="solid"
-                    colorScheme="blue"
-                    onClick={() => handleCloseView()}
-                >
-                    Close Full View
-                </Button>
-                {isSignIn && (
-                    <ButtonGroup>
-                        <Button onClick={() => handleLikeDislike("like")}>
-                            Like
-                        </Button>
-                        <Button onClick={() => handleLikeDislike("dislike")}>
-                            Dislike
-                        </Button>
-                    </ButtonGroup>
-                )}
+                <ButtonGroup spacing={"1rem"}>
+                    <Button
+                        variant="outline"
+                        colorScheme="yellow"
+                        onClick={() => handleCloseView()}
+                    >
+                        Close Full View
+                    </Button>
+                    {isSignIn && (
+                        <ButtonGroup spacing={"1rem"}>
+                            <Button onClick={() => handleLikeDislike("like")}>
+                                Like
+                            </Button>
+                            <Button
+                                onClick={() => handleLikeDislike("dislike")}
+                            >
+                                Dislike
+                            </Button>
+                        </ButtonGroup>
+                    )}
+                </ButtonGroup>
             </CardFooter>
         </Card>
     );
