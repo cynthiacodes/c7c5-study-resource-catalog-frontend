@@ -10,25 +10,22 @@ import {
     Stack,
     Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
-import { DetailedResourceCard } from "./DetailedResourceCard";
-import { Resource, User } from "./Interfaces";
+import { Navigate } from "react-router-dom";
+import { Resource } from "./Interfaces";
 
 interface ResourceCardViewProps {
     allResources: Resource[];
-    isSignIn: boolean;
-    currentUser: User | null | undefined;
-    users: User[];
+    singleResource: Resource | null | undefined;
+    setSingleResource: React.Dispatch<
+        React.SetStateAction<Resource | null | undefined>
+    >;
 }
 
 export function ResourceCard({
     allResources,
-    isSignIn,
-    currentUser,
-    users,
+    singleResource,
+    setSingleResource,
 }: ResourceCardViewProps): JSX.Element {
-    const [singleResource, setSingleResource] = useState<Resource | null>();
-
     const handleViewMore = (resource: Resource) => {
         setSingleResource(resource);
     };
@@ -67,13 +64,7 @@ export function ResourceCard({
                 ))}
             </SimpleGrid>
             {singleResource && (
-                <DetailedResourceCard
-                    singleResource={singleResource}
-                    isSignIn={isSignIn}
-                    setSingleResource={setSingleResource}
-                    currentUser={currentUser}
-                    users={users}
-                />
+                <Navigate to={`/resource/${singleResource.resources_id}`} />
             )}
         </Box>
     );
