@@ -8,10 +8,12 @@ import {
     CardFooter,
     Button,
     ButtonGroup,
+    Container,
 } from "@chakra-ui/react";
 import { Resource, User } from "./Interfaces";
 import axios from "axios";
 import { baseURL } from "../utilities/baseURL";
+import { Navigate } from "react-router-dom";
 
 interface DetailedResourceCardViewProps {
     singleResource: Resource | null | undefined;
@@ -32,6 +34,10 @@ export function DetailedResourceCard({
 }: DetailedResourceCardViewProps): JSX.Element {
     const handleCloseView = () => {
         setSingleResource(null);
+    };
+    const handleAdd = () => {
+        //function post to database
+        //once post is successful, setSingleResource(null)-> redirect to home page or add a state to redirect tostudylist
     };
 
     const handleLikeDislike = async (likeOrDislike: string) => {
@@ -72,58 +78,70 @@ export function DetailedResourceCard({
         return creator?.name;
     }
     return (
-        <Card maxW="sm" m={"5rem auto"}>
-            <CardBody>
-                <Stack mt="6" spacing="3">
-                    <Heading size="md">
-                        <a
-                            href={singleResource?.url}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            {singleResource?.resource_name}
-                        </a>
-                    </Heading>
-                    <Text>{singleResource?.author_name}</Text>
-                    <Text>{singleResource?.description}</Text>
-                    <Text color="yellow.700">
-                        {singleResource?.recommended_stage}
-                    </Text>
-                    <Text>
-                        Creator: {getCreatorName(singleResource?.user_id)}
-                    </Text>
-                    <Text>
-                        Creator_opinion: {singleResource?.creator_opinion}
-                    </Text>
-                    <Text>
-                        Creator_reason: {singleResource?.creator_reason}
-                    </Text>
-                </Stack>
-            </CardBody>
-            <Divider />
-            <CardFooter>
-                <ButtonGroup spacing={"1rem"}>
-                    <Button
-                        variant="outline"
-                        colorScheme="yellow"
-                        onClick={() => handleCloseView()}
-                    >
-                        Close Full View
-                    </Button>
-                    {isSignIn && (
-                        <ButtonGroup spacing={"1rem"}>
-                            <Button onClick={() => handleLikeDislike("like")}>
-                                Like
-                            </Button>
-                            <Button
-                                onClick={() => handleLikeDislike("dislike")}
+        <Container
+            bg={"#FFFEFD"}
+            minHeight={"100vh"}
+            minWidth={"100vw"}
+            pb={"5rem"}
+            pt={"5rem"}
+        >
+            <Card maxW="sm" m={"auto"}>
+                <CardBody>
+                    <Stack mt="6" spacing="3">
+                        <Heading size="md">
+                            <a
+                                href={singleResource?.url}
+                                target="_blank"
+                                rel="noreferrer"
                             >
-                                Dislike
-                            </Button>
-                        </ButtonGroup>
-                    )}
-                </ButtonGroup>
-            </CardFooter>
-        </Card>
+                                {singleResource?.resource_name}
+                            </a>
+                        </Heading>
+                        <Text>{singleResource?.author_name}</Text>
+                        <Text>{singleResource?.description}</Text>
+                        <Text color="yellow.700">
+                            {singleResource?.recommended_stage}
+                        </Text>
+                        <Text>
+                            Creator: {getCreatorName(singleResource?.user_id)}
+                        </Text>
+                        <Text>
+                            Creator_opinion: {singleResource?.creator_opinion}
+                        </Text>
+                        <Text>
+                            Creator_reason: {singleResource?.creator_reason}
+                        </Text>
+                    </Stack>
+                </CardBody>
+                <Divider />
+                <CardFooter>
+                    <ButtonGroup spacing={"1rem"}>
+                        <Button
+                            variant="outline"
+                            colorScheme="yellow"
+                            onClick={() => handleCloseView()}
+                        >
+                            Home
+                        </Button>
+                        {!singleResource && <Navigate to="/" />}
+                        {isSignIn && (
+                            <ButtonGroup spacing={"1rem"}>
+                                <Button
+                                    onClick={() => handleLikeDislike("like")}
+                                >
+                                    Like
+                                </Button>
+                                <Button
+                                    onClick={() => handleLikeDislike("dislike")}
+                                >
+                                    Dislike
+                                </Button>
+                                <Button onClick={() => handleAdd()}>Add</Button>
+                            </ButtonGroup>
+                        )}
+                    </ButtonGroup>
+                </CardFooter>
+            </Card>
+        </Container>
     );
 }
