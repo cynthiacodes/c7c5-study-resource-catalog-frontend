@@ -66,15 +66,26 @@ export function Search({
             borderRadius={"1rem"}
         >
             {tagFilters}
-            <Input
-                m={"1em auto"}
-                w={"50%"}
-                display={"block"}
-                focusBorderColor="orange.100"
-                placeholder="Find a resource"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-            />
+            <Box display={"block"}>
+                <Input
+                    m={"1em auto"}
+                    w={"50%"}
+                    focusBorderColor="orange.100"
+                    placeholder="Find a resource"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                {input && (
+                    <Button
+                        ml={"1rem"}
+                        onClick={() => {
+                            setInput("");
+                        }}
+                    >
+                        Show all
+                    </Button>
+                )}
+            </Box>
         </Box>
     );
 }
