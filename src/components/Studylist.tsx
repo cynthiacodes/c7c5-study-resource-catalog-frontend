@@ -1,14 +1,34 @@
 import { Button, Container, Text } from "@chakra-ui/react";
-import { User } from "./Interfaces";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { ResourceCard } from "./ResourceCard";
+import { Resource, User } from "./Interfaces";
+import { ResourceCard } from "./ResourceCard";
 
 interface StudylistViewProp {
     currentUser: User | null | undefined;
+    singleResource: Resource | null | undefined;
+    setSingleResource: React.Dispatch<
+        React.SetStateAction<Resource | null | undefined>
+    >;
+    fetchStudyList: () => Promise<Resource[]>;
+    isChecked: boolean;
 }
 
-export function Studylist({ currentUser }: StudylistViewProp): JSX.Element {
-    //fetch current users study list from database in App.tsx, set state in app.tsx and pass down as props
+export function Studylist({
+    currentUser,
+    singleResource,
+    setSingleResource,
+    fetchStudyList,
+    isChecked,
+}: StudylistViewProp): JSX.Element {
+    const [studyListData, setStudyListData] = useState<Resource[]>([]);
+
+    useEffect(() => {
+        fetchStudyList().then((data) => {
+            setStudyListData(data);
+        });
+    }, [fetchStudyList, isChecked]);
+
     return (
         <Container
             bg={"#FFFEFD"}
@@ -23,11 +43,11 @@ export function Studylist({ currentUser }: StudylistViewProp): JSX.Element {
                     <Link to={"/"}>Home</Link>
                 </Button>
             </Text>
-            {/* <ResourceCard
-                        allResources={filteredResourcesArray} // takes users study list array
-                        singleResource={singleResource} // stays as it is
-                        setSingleResource={setSingleResource} // stays as it is
-                    /> */}
+            <ResourceCard
+                allResources={studyListData} // takes users study list array
+                singleResource={singleResource} // stays as it is
+                setSingleResource={setSingleResource} // stays as it is
+            />
         </Container>
     );
 }

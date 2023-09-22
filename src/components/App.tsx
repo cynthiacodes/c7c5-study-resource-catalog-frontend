@@ -7,15 +7,33 @@ import { Resource, User } from "./Interfaces";
 import { DetailedResourceCard } from "./DetailedResourceCard";
 import { fetchAllUsers } from "../utilities/fetchAllUsers";
 import { Studylist } from "./Studylist";
+import { fetchAllResources } from "../utilities/fetchAllResources";
+import axios from "axios";
+import { baseURL } from "../utilities/baseURL";
 
 function App() {
     const [currentUser, setCurrentUser] = useState<User | null>();
+    const [allResources, setAllResources] = useState<Resource[]>([]);
     const [singleResource, setSingleResource] = useState<Resource | null>();
     const [users, setUsers] = useState<User[]>([]);
     const [isSignIn, setIsSignIn] = useState(false);
+    const [isChecked, setIsChecked] = useState(true); // for checkbox
     useEffect(() => {
         fetchAllUsers().then((allUsers) => setUsers(allUsers));
     }, []);
+    useEffect(() => {
+        fetchAllResources().then((allResourceFromDB) =>
+            setAllResources(allResourceFromDB)
+        );
+    }, []);
+
+    const fetchStudyList = async () => {
+        const response = await axios.get(
+            `${baseURL}to-study/${currentUser?.user_id}`
+        );
+        const userStudyListData = response.data;
+        return userStudyListData;
+    };
 
     return (
         <div className="App">
@@ -26,17 +44,28 @@ function App() {
                         <LandingPage
                             currentUser={currentUser}
                             setCurrentUser={setCurrentUser}
+                            allResources={allResources}
                             singleResource={singleResource}
                             setSingleResource={setSingleResource}
                             users={users}
                             isSignIn={isSignIn}
                             setIsSignIn={setIsSignIn}
+                            isChecked={isChecked}
+                            setIsChecked={setIsChecked}
                         />
                     }
                 />
                 <Route
-                    path="/studylist/:user_id"
-                    element={<Studylist currentUser={currentUser} />}
+                    path="/to-study/:user_id"
+                    element={
+                        <Studylist
+                            currentUser={currentUser}
+                            singleResource={singleResource}
+                            setSingleResource={setSingleResource}
+                            fetchStudyList={fetchStudyList}
+                            isChecked={isChecked}
+                        />
+                    }
                 />
                 <Route
                     path={`/resource/:resource_Id`}

@@ -7,9 +7,8 @@ import {
     Spacer,
     Text,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAllResources } from "../utilities/fetchAllResources";
 import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
@@ -19,6 +18,7 @@ interface LandingPageViewProp {
     setCurrentUser: React.Dispatch<
         React.SetStateAction<User | null | undefined>
     >;
+    allResources: Resource[];
     singleResource: Resource | null | undefined;
     setSingleResource: React.Dispatch<
         React.SetStateAction<Resource | null | undefined>
@@ -26,18 +26,20 @@ interface LandingPageViewProp {
     users: User[];
     isSignIn: boolean;
     setIsSignIn: React.Dispatch<React.SetStateAction<boolean>>;
+    isChecked: boolean;
+    setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function LandingPage({
     currentUser,
     setCurrentUser,
+    allResources,
     singleResource,
     setSingleResource,
     users,
     isSignIn,
     setIsSignIn,
 }: LandingPageViewProp): JSX.Element {
-    const [allResources, setAllResources] = useState<Resource[]>([]);
     const [input, setInput] = useState<string>("");
     const [filteredResourcesArray, setFilteredResourcesArray] = useState<
         Resource[]
@@ -57,12 +59,6 @@ export function LandingPage({
             setCurrentUser(null);
         }
     }
-
-    useEffect(() => {
-        fetchAllResources().then((allResourceFromDB) =>
-            setAllResources(allResourceFromDB)
-        );
-    }, []);
 
     return (
         <Container
@@ -117,7 +113,7 @@ export function LandingPage({
                                 <Link to="/newresource">Add new resource</Link>
                             </Button>
                             <Button>
-                                <Link to={`/studylist/${currentUser?.user_id}`}>
+                                <Link to={`/to-study/${currentUser?.user_id}`}>
                                     My Study List
                                 </Link>
                             </Button>
