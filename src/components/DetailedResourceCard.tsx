@@ -4,19 +4,18 @@ import {
     Card,
     CardBody,
     CardFooter,
+    Checkbox,
     Container,
     Divider,
     Heading,
     Stack,
     Text,
-    Checkbox,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { baseURL } from "../utilities/baseURL";
 import { Resource, User } from "./Interfaces";
-import { useEffect, useState } from "react";
-import { fetchAllUsers } from "../utilities/fetchAllUsers";
 
 interface DetailedResourceCardViewProps {
     singleResource: Resource | null | undefined;
