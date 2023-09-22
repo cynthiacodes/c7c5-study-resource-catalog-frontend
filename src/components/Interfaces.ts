@@ -1,5 +1,5 @@
 export interface Resource {
-    resources_id: number;
+    resource_id: number;
     resource_name: string;
     author_name: string;
     url: string;

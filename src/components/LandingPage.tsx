@@ -59,10 +59,9 @@ export function LandingPage({
     }
 
     useEffect(() => {
-        fetchAllResources().then((allResources) =>
-            setAllResources(allResources)
+        fetchAllResources().then((allResourceFromDB) =>
+            setAllResources(allResourceFromDB)
         );
-        console.log({ allResources });
     }, []);
 
     return (

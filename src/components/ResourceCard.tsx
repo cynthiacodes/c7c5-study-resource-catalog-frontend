@@ -28,7 +28,7 @@ export function ResourceCard({
 }: ResourceCardViewProps): JSX.Element {
     const handleViewMore = (resource: Resource) => {
         setSingleResource(resource);
-        console.log(singleResource);
+        console.log(resource.resource_id);
     };
 
     return (
@@ -38,7 +38,7 @@ export function ResourceCard({
                 templateColumns="repeat(auto-fill, minmax(200px, 1fr))"
             >
                 {allResources.map((resource) => (
-                    <Card maxW="sm" key={resource.resources_id}>
+                    <Card maxW="sm" key={resource.resource_id}>
                         <CardBody>
                             <Stack mt="6" spacing="3">
                                 <Heading size="md">
@@ -65,7 +65,7 @@ export function ResourceCard({
                 ))}
             </SimpleGrid>
             {singleResource && (
-                <Navigate to={`/resource/${singleResource.resources_id}`} />
+                <Navigate to={`/resource/${singleResource.resource_id}`} />
             )}
         </Box>
     );
