@@ -17,7 +17,7 @@ function App() {
     const [singleResource, setSingleResource] = useState<Resource | null>();
     const [users, setUsers] = useState<User[]>([]);
     const [isSignIn, setIsSignIn] = useState(false);
-    const [isChecked, setIsChecked] = useState(true); // for checkbox
+    const [studyListData, setStudyListData] = useState<Resource[]>([]);
     useEffect(() => {
         fetchAllUsers().then((allUsers) => setUsers(allUsers));
     }, []);
@@ -50,8 +50,6 @@ function App() {
                             users={users}
                             isSignIn={isSignIn}
                             setIsSignIn={setIsSignIn}
-                            isChecked={isChecked}
-                            setIsChecked={setIsChecked}
                         />
                     }
                 />
@@ -62,8 +60,7 @@ function App() {
                             currentUser={currentUser}
                             singleResource={singleResource}
                             setSingleResource={setSingleResource}
-                            fetchStudyList={fetchStudyList}
-                            isChecked={isChecked}
+                            studyListData={studyListData}
                         />
                     }
                 />
@@ -71,6 +68,8 @@ function App() {
                     path={`/resource/:resource_Id`}
                     element={
                         <DetailedResourceCard
+                            setStudyListData={setStudyListData}
+                            fetchStudyList={fetchStudyList}
                             singleResource={singleResource}
                             users={users}
                             isSignIn={isSignIn}

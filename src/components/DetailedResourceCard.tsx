@@ -1,21 +1,22 @@
 import {
-    Stack,
-    Heading,
-    Divider,
-    Text,
+    Button,
+    ButtonGroup,
     Card,
     CardBody,
     CardFooter,
-    Checkbox,
-    Button,
-    ButtonGroup,
     Container,
+    Divider,
+    Heading,
+    Stack,
+    Text,
+    Checkbox,
 } from "@chakra-ui/react";
-import { Resource, User } from "./Interfaces";
 import axios from "axios";
-import { baseURL } from "../utilities/baseURL";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { baseURL } from "../utilities/baseURL";
+import { Resource, User } from "./Interfaces";
+import { useEffect, useState } from "react";
+import { fetchAllUsers } from "../utilities/fetchAllUsers";
 
 interface DetailedResourceCardViewProps {
     singleResource: Resource | null | undefined;
@@ -25,41 +26,58 @@ interface DetailedResourceCardViewProps {
     >;
     currentUser: User | null | undefined;
     users: User[];
+    fetchStudyList: () => Promise<Resource[]>;
+    setStudyListData: React.Dispatch<React.SetStateAction<Resource[]>>;
 }
 
 export function DetailedResourceCard({
+    setStudyListData,
     singleResource,
     isSignIn,
     setSingleResource,
     currentUser,
     users,
+    fetchStudyList,
 }: DetailedResourceCardViewProps): JSX.Element {
-    const [isChecked, setIsChecked] = useState(true); // for checkbox
+    const [isChecked, setIsChecked] = useState<boolean>(true);
+
     const handleCloseView = () => {
         setSingleResource(null);
     };
     const handleAddToStudyList = async () => {
         try {
-            setIsChecked(!isChecked);
-            if (isChecked === true) {
-                const response = await axios.post(`${baseURL}to-study`, {
-                    user_id: currentUser?.user_id,
-                    resource_id: singleResource?.resource_id,
-                });
-                setSingleResource(null);
-                alert(
-                    `Resource: ${singleResource?.resource_name} added to study list!`
-                );
-                console.log("resource added to study list", response.data);
-            } else {
-                //delete from database
-                console.log("resource to delete from study list");
-            }
+            const response = await axios.post(`${baseURL}to-study`, {
+                user_id: currentUser?.user_id,
+                resource_id: singleResource?.resource_id,
+            });
+            alert(
+                `Resource: ${singleResource?.resource_name} added to study list!`
+            );
+            console.log("resource added to study list", response.data);
         } catch (error) {
             console.error(error);
         }
-        //function post to database
-        //once post is successful, setSingleResource(null)-> redirect to home page or add a state to redirect tostudylist
+    };
+    const handleDeleteFromStudyList = async () => {
+        try {
+            const response = await axios.delete(
+                `${baseURL}to-study/${currentUser?.user_id}/${singleResource?.resource_id}`
+            );
+            alert(
+                `Resource: ${singleResource?.resource_name} delete from study list!`
+            );
+            console.log("resource to delete from study list", response);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    const handleAddAndDeleteFromStudyList = () => {
+        setIsChecked(!isChecked);
+        if (isChecked) {
+            handleAddToStudyList();
+        } else {
+            handleDeleteFromStudyList();
+        }
     };
 
     const handleLikeDislike = async (likeOrDislike: string) => {
@@ -94,6 +112,12 @@ export function DetailedResourceCard({
             }
         }
     };
+
+    useEffect(() => {
+        fetchStudyList().then((data) => {
+            setStudyListData(data);
+        });
+    }, [fetchStudyList, isChecked, setStudyListData]);
 
     function getCreatorName(user_id: number | undefined): string | undefined {
         const creator = users.find((user) => user.user_id === user_id);
@@ -138,6 +162,7 @@ export function DetailedResourceCard({
                 <Divider />
                 <CardFooter>
                     <ButtonGroup spacing={"1rem"}>
+                        {!singleResource && <Navigate to="/" />}
                         <Button
                             variant="outline"
                             colorScheme="yellow"
@@ -145,7 +170,6 @@ export function DetailedResourceCard({
                         >
                             Home
                         </Button>
-                        {!singleResource && <Navigate to="/" />}
                         {isSignIn && (
                             <ButtonGroup spacing={"1rem"}>
                                 <Button
@@ -158,11 +182,14 @@ export function DetailedResourceCard({
                                 >
                                     Dislike
                                 </Button>
+
                                 <Checkbox
                                     isChecked={!isChecked}
-                                    onChange={() => handleAddToStudyList()}
+                                    onChange={() =>
+                                        handleAddAndDeleteFromStudyList()
+                                    }
                                 >
-                                    Add To Study List
+                                    Add To Study
                                 </Checkbox>
                             </ButtonGroup>
                         )}

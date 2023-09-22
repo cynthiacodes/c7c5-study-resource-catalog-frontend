@@ -1,5 +1,4 @@
 import { Button, Container, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
@@ -10,25 +9,15 @@ interface StudylistViewProp {
     setSingleResource: React.Dispatch<
         React.SetStateAction<Resource | null | undefined>
     >;
-    fetchStudyList: () => Promise<Resource[]>;
-    isChecked: boolean;
+    studyListData: Resource[];
 }
 
 export function Studylist({
     currentUser,
     singleResource,
     setSingleResource,
-    fetchStudyList,
-    isChecked,
+    studyListData,
 }: StudylistViewProp): JSX.Element {
-    const [studyListData, setStudyListData] = useState<Resource[]>([]);
-
-    useEffect(() => {
-        fetchStudyList().then((data) => {
-            setStudyListData(data);
-        });
-    }, [fetchStudyList, isChecked]);
-
     return (
         <Container
             bg={"#FFFEFD"}

@@ -26,8 +26,6 @@ interface LandingPageViewProp {
     users: User[];
     isSignIn: boolean;
     setIsSignIn: React.Dispatch<React.SetStateAction<boolean>>;
-    isChecked: boolean;
-    setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function LandingPage({
