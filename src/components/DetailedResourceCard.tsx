@@ -6,6 +6,7 @@ import {
     Card,
     CardBody,
     CardFooter,
+    Checkbox,
     Button,
     ButtonGroup,
     Container,
@@ -35,7 +36,19 @@ export function DetailedResourceCard({
     const handleCloseView = () => {
         setSingleResource(null);
     };
-    const handleAdd = () => {
+    const handleAddToStudyList = async () => {
+        try {
+            // const response = await axios.post(`${baseURL}to-study`, {
+            //     user_id: currentUser?.user_id,
+            //     resource_id: singleResource?.resources_id,
+            // });
+            // setSingleResource(null);
+            // console.log("resource added to study list", response.data);
+
+            console.log(singleResource?.resources_id);
+        } catch (error) {
+            console.error(error);
+        }
         //function post to database
         //once post is successful, setSingleResource(null)-> redirect to home page or add a state to redirect tostudylist
     };
@@ -136,7 +149,12 @@ export function DetailedResourceCard({
                                 >
                                     Dislike
                                 </Button>
-                                <Button onClick={() => handleAdd()}>Add</Button>
+
+                                <Checkbox
+                                    onChange={() => handleAddToStudyList()}
+                                >
+                                    Add To Study List
+                                </Checkbox>
                             </ButtonGroup>
                         )}
                     </ButtonGroup>

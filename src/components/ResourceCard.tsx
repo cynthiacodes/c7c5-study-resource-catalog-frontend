@@ -28,6 +28,7 @@ export function ResourceCard({
 }: ResourceCardViewProps): JSX.Element {
     const handleViewMore = (resource: Resource) => {
         setSingleResource(resource);
+        console.log(singleResource);
     };
 
     return (

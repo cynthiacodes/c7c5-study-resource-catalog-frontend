@@ -62,6 +62,7 @@ export function LandingPage({
         fetchAllResources().then((allResources) =>
             setAllResources(allResources)
         );
+        console.log({ allResources });
     }, []);
 
     return (
