@@ -1,8 +1,14 @@
-import { Button, Flex, Select, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import {
+    Button,
+    ButtonGroup,
+    Container,
+    Flex,
+    Select,
+    Spacer,
+    Text,
+} from "@chakra-ui/react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAllResources } from "../utilities/fetchAllResources";
-import { fetchAllUsers } from "../utilities/fetchAllUsers";
 import { Resource, User } from "./Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
@@ -12,24 +18,30 @@ interface LandingPageViewProp {
     setCurrentUser: React.Dispatch<
         React.SetStateAction<User | null | undefined>
     >;
+    allResources: Resource[];
+    singleResource: Resource | null | undefined;
+    setSingleResource: React.Dispatch<
+        React.SetStateAction<Resource | null | undefined>
+    >;
+    users: User[];
+    isSignIn: boolean;
+    setIsSignIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function LandingPage({
     currentUser,
     setCurrentUser,
+    allResources,
+    singleResource,
+    setSingleResource,
+    users,
+    isSignIn,
+    setIsSignIn,
 }: LandingPageViewProp): JSX.Element {
-    const [users, setUsers] = useState<User[]>([]);
-
-    const [isSignIn, setIsSignIn] = useState(false);
-    const [allResources, setAllResources] = useState<Resource[]>([]);
     const [input, setInput] = useState<string>("");
     const [filteredResourcesArray, setFilteredResourcesArray] = useState<
         Resource[]
     >([]);
-
-    useEffect(() => {
-        fetchAllUsers().then((allUsers) => setUsers(allUsers));
-    }, []);
 
     function handleSelectedUser(event: React.ChangeEvent<HTMLSelectElement>) {
         const currentUserName = event.target.value;
@@ -46,45 +58,66 @@ export function LandingPage({
         }
     }
 
-    useEffect(() => {
-        fetchAllResources().then((allResources) =>
-            setAllResources(allResources)
-        );
-    }, []);
-
     return (
-        <>
-            <Flex w="50%">
-                {isSignIn ? (
-                    <Text>Current user: {currentUser && currentUser.name}</Text>
-                ) : (
-                    <Select
-                        placeholder="select user"
-                        onChange={(event) => {
-                            handleSelectedUser(event);
-                        }}
-                    >
-                        {users.map((user) => {
-                            return (
-                                <option key={user.user_id}>{user.name}</option>
-                            );
-                        })}
-                    </Select>
-                )}
+        <Container
+            bg={"#FFFEFD"}
+            minHeight={"100vh"}
+            minWidth={"100vw"}
+            pb={"5rem"}
+        >
+            <Container minWidth={"80%"} pb={"5rem"}>
+                <Flex alignItems="center" pt="1em">
+                    <Spacer />
+                    {isSignIn ? (
+                        <Text fontSize="2xl">
+                            Current user:{" "}
+                            <Text as="b">
+                                {currentUser && currentUser.name}
+                            </Text>
+                        </Text>
+                    ) : (
+                        <Select
+                            w={"30%"}
+                            placeholder="select user"
+                            onChange={(event) => {
+                                handleSelectedUser(event);
+                            }}
+                        >
+                            {users.map((user) => {
+                                return (
+                                    <option key={user.user_id}>
+                                        {user.name}
+                                    </option>
+                                );
+                            })}
+                        </Select>
+                    )}
 
-                <Button
-                    onClick={handleSignInAndOut}
-                    isDisabled={currentUser === null}
-                >
-                    {isSignIn ? "Sign out" : "Sign in"}
-                </Button>
-                {isSignIn && (
-                    <Button>
-                        <Link to="/newresource">Add new resource</Link>
+                    <Button
+                        ml="1em"
+                        onClick={handleSignInAndOut}
+                        isDisabled={
+                            currentUser === null || currentUser === undefined
+                        }
+                    >
+                        {isSignIn ? "Sign out" : "Sign in"}
                     </Button>
-                )}
-            </Flex>
-            <>
+                </Flex>
+                <Flex alignItems="center" pt="1em">
+                    <Spacer />
+                    {isSignIn && (
+                        <ButtonGroup>
+                            <Button>
+                                <Link to="/newresource">Add new resource</Link>
+                            </Button>
+                            <Button>
+                                <Link to={`/to-study/${currentUser?.user_id}`}>
+                                    My Study List
+                                </Link>
+                            </Button>
+                        </ButtonGroup>
+                    )}
+                </Flex>
                 <Search
                     setFilteredResourcesArray={setFilteredResourcesArray}
                     input={input}
@@ -92,12 +125,24 @@ export function LandingPage({
                     allResources={allResources}
                 />
 
-                {input.length === 0 ? (
-                    <ResourceCard allResources={allResources} />
-                ) : (
-                    <ResourceCard allResources={filteredResourcesArray} />
+                {input.length > 0 && filteredResourcesArray.length === 0 && (
+                    <Text fontSize={"2xl"}>No Result Found</Text>
                 )}
-            </>
-        </>
+
+                {input.length === 0 ? (
+                    <ResourceCard
+                        allResources={allResources}
+                        singleResource={singleResource}
+                        setSingleResource={setSingleResource}
+                    />
+                ) : (
+                    <ResourceCard
+                        allResources={filteredResourcesArray}
+                        singleResource={singleResource}
+                        setSingleResource={setSingleResource}
+                    />
+                )}
+            </Container>
+        </Container>
     );
 }

@@ -11,3 +11,19 @@ describe("Find username in the drop down option ", () => {
         cy.contains("Cynthia");
     });
 });
+
+describe("Testing see more button ", () => {
+    it("To find see more button", () => {
+        cy.visit("https://study-resource-catalog-c7c5.netlify.app/");
+
+        cy.get("button").should("contain", "See more");
+    });
+});
+
+describe("Testing sign in button ", () => {
+    it("To test if sign in button is clickable", () => {
+        cy.visit("https://study-resource-catalog-c7c5.netlify.app/");
+
+        cy.get("button").should("contain", "Sign in").click();
+    });
+});

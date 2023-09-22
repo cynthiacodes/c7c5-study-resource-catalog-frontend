@@ -1,4 +1,4 @@
-import { Button, Input } from "@chakra-ui/react";
+import { Box, Button, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { filterResourceBySearchInput } from "../utilities/filterResultsBySearchText";
 import { Resource } from "./Interfaces";
@@ -35,7 +35,17 @@ export function Search({
             }
         }
         return cloudOfTags.map((tag, index) => (
-            <Button key={index} onClick={() => handleFilterTags(tag)}>
+            <Button
+                key={index}
+                onClick={() => handleFilterTags(tag)}
+                m={"1em 0.5rem"}
+                borderRadius="full"
+                border={"none"}
+                textAlign={"center"}
+                bg="yellow.500"
+                color={"#FFFEFD"}
+                variant="outline"
+            >
                 {tag}
             </Button>
         ));
@@ -48,13 +58,34 @@ export function Search({
     const tagFilters = createTag(allResources);
 
     return (
-        <>
-            <Input
-                placeholder="Find a resource"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-            />
+        <Box
+            textAlign={"center"}
+            boxShadow="base"
+            p={"0.5rem"}
+            mb={"1rem"}
+            borderRadius={"1rem"}
+        >
             {tagFilters}
-        </>
+            <Box display={"block"}>
+                <Input
+                    m={"1em auto"}
+                    w={"50%"}
+                    focusBorderColor="orange.100"
+                    placeholder="Find a resource"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                {input && (
+                    <Button
+                        ml={"1rem"}
+                        onClick={() => {
+                            setInput("");
+                        }}
+                    >
+                        Show all
+                    </Button>
+                )}
+            </Box>
+        </Box>
     );
 }
