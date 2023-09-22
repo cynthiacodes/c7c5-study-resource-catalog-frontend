@@ -15,6 +15,7 @@ import { Resource, User } from "./Interfaces";
 import axios from "axios";
 import { baseURL } from "../utilities/baseURL";
 import { Navigate } from "react-router-dom";
+import { useState } from "react";
 
 interface DetailedResourceCardViewProps {
     singleResource: Resource | null | undefined;
@@ -33,19 +34,27 @@ export function DetailedResourceCard({
     currentUser,
     users,
 }: DetailedResourceCardViewProps): JSX.Element {
+    const [isChecked, setIsChecked] = useState(true); // for checkbox
     const handleCloseView = () => {
         setSingleResource(null);
     };
     const handleAddToStudyList = async () => {
         try {
-            // const response = await axios.post(`${baseURL}to-study`, {
-            //     user_id: currentUser?.user_id,
-            //     resource_id: singleResource?.resources_id,
-            // });
-            // setSingleResource(null);
-            // console.log("resource added to study list", response.data);
-
-            console.log(singleResource?.resources_id);
+            setIsChecked(!isChecked);
+            if (isChecked === true) {
+                const response = await axios.post(`${baseURL}to-study`, {
+                    user_id: currentUser?.user_id,
+                    resource_id: singleResource?.resource_id,
+                });
+                setSingleResource(null);
+                alert(
+                    `Resource: ${singleResource?.resource_name} added to study list!`
+                );
+                console.log("resource added to study list", response.data);
+            } else {
+                //delete from database
+                console.log("resource to delete from study list");
+            }
         } catch (error) {
             console.error(error);
         }
@@ -58,7 +67,7 @@ export function DetailedResourceCard({
             try {
                 const likeData = {
                     user_id: currentUser?.user_id,
-                    resource_id: singleResource?.resources_id,
+                    resource_id: singleResource?.resource_id,
                 };
                 const response = await axios.put(
                     `${baseURL}opinions/like`,
@@ -72,7 +81,7 @@ export function DetailedResourceCard({
             try {
                 const dislikeData = {
                     user_id: currentUser?.user_id,
-                    resource_id: singleResource?.resources_id,
+                    resource_id: singleResource?.resource_id,
                     is_dislike: true,
                 };
                 const response = await axios.put(
@@ -149,8 +158,8 @@ export function DetailedResourceCard({
                                 >
                                     Dislike
                                 </Button>
-
                                 <Checkbox
+                                    isChecked={!isChecked}
                                     onChange={() => handleAddToStudyList()}
                                 >
                                     Add To Study List
