@@ -14,8 +14,8 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { Resource, User } from "../utilities/Interfaces";
 import { baseURL } from "../utilities/baseURL";
-import { Resource, User } from "./Interfaces";
 
 interface DetailedResourceCardViewProps {
     singleResource: Resource | null | undefined;
@@ -45,27 +45,25 @@ export function DetailedResourceCard({
     };
     const handleAddToStudyList = async () => {
         try {
-            const response = await axios.post(`${baseURL}to-study`, {
+            await axios.post(`${baseURL}to-study`, {
                 user_id: currentUser?.user_id,
                 resource_id: singleResource?.resource_id,
             });
             alert(
                 `Resource: ${singleResource?.resource_name} added to study list!`
             );
-            console.log("resource added to study list", response.data);
         } catch (error) {
             console.error(error);
         }
     };
     const handleDeleteFromStudyList = async () => {
         try {
-            const response = await axios.delete(
+            await axios.delete(
                 `${baseURL}to-study/${currentUser?.user_id}/${singleResource?.resource_id}`
             );
             alert(
                 `Resource: ${singleResource?.resource_name} delete from study list!`
             );
-            console.log("resource to delete from study list", response);
         } catch (error) {
             console.error(error);
         }
@@ -86,11 +84,7 @@ export function DetailedResourceCard({
                     user_id: currentUser?.user_id,
                     resource_id: singleResource?.resource_id,
                 };
-                const response = await axios.put(
-                    `${baseURL}opinions/like`,
-                    likeData
-                );
-                console.log("like", response);
+                await axios.put(`${baseURL}opinions/like`, likeData);
             } catch (error) {
                 console.error(error);
             }
@@ -101,11 +95,7 @@ export function DetailedResourceCard({
                     resource_id: singleResource?.resource_id,
                     is_dislike: true,
                 };
-                const response = await axios.put(
-                    `${baseURL}opinions/dislike`,
-                    dislikeData
-                );
-                console.log("dislike", response);
+                await axios.put(`${baseURL}opinions/dislike`, dislikeData);
             } catch (error) {
                 console.error(error);
             }

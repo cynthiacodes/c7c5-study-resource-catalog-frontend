@@ -11,14 +11,14 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { baseURL } from "../utilities/baseURL";
-import { NewResource, User } from "./Interfaces";
 import {
-    tagsArray,
-    stageArray,
-    creatorReasonsArray,
     contentTypeArray,
+    creatorReasonsArray,
+    stageArray,
+    tagsArray,
 } from "../utilities/AddNewResourcesSelectOptions";
+import { NewResource, User } from "../utilities/Interfaces";
+import { baseURL } from "../utilities/baseURL";
 
 interface currentUserProps {
     currentUser: User | null | undefined;
@@ -44,17 +44,14 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await axios.post(
-                `${baseURL}resources`,
-                resourceData
-            );
+            await axios.post(`${baseURL}resources`, resourceData);
 
-            console.log(response.data);
             setIsLoading(false);
             setSubmitted(true);
         } catch (error) {
             alert(`error, your resource failed to add, ${error}`);
             console.error(error);
+            setIsLoading(false);
         }
     }
     function handleResourceInput(e: React.ChangeEvent<HTMLInputElement>) {
@@ -65,7 +62,6 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
 
             [e.target.name]: value,
         });
-        console.log("resourceData", resourceData);
     }
     function handleResourceSelect(e: React.ChangeEvent<HTMLSelectElement>) {
         const value = e.target.value;

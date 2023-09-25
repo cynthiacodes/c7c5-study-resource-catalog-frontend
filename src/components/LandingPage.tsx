@@ -2,6 +2,7 @@ import {
     Button,
     ButtonGroup,
     Container,
+    Divider,
     Flex,
     Select,
     Spacer,
@@ -9,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Resource, User } from "./Interfaces";
+import { Resource, User } from "../utilities/Interfaces";
 import { ResourceCard } from "./ResourceCard";
 import { Search } from "./Search";
 
@@ -65,8 +66,11 @@ export function LandingPage({
             minWidth={"100vw"}
             pb={"5rem"}
         >
-            <Container minWidth={"80%"} pb={"5rem"}>
+            <Container minWidth={"80vw"} pb={"5rem"}>
                 <Flex alignItems="center" pt="1em">
+                    <Text as="b" fontSize="2xl">
+                        Study resource catalog
+                    </Text>
                     <Spacer />
                     {isSignIn ? (
                         <Text fontSize="2xl">
@@ -118,6 +122,7 @@ export function LandingPage({
                         </ButtonGroup>
                     )}
                 </Flex>
+                <Divider mt={"1rem"} mb={"1rem"} />
                 <Search
                     setFilteredResourcesArray={setFilteredResourcesArray}
                     input={input}
@@ -142,6 +147,37 @@ export function LandingPage({
                         setSingleResource={setSingleResource}
                     />
                 )}
+            </Container>
+            <Container minWidth={"80vw"} pb={"1rem"}>
+                <Divider mt={"1rem"} mb={"1rem"} />
+                <Text fontSize={"sm"}>
+                    This is a team project for{" "}
+                    <Text as="b">Software Engineering Training Program</Text> at
+                    Academy
+                </Text>
+                <Text fontSize={"sm"}>
+                    <Text as="b"> Team C7C5</Text>{" "}
+                    <Text>Team members: Cynthia, Stephanie, Ho Kei</Text>
+                    <Text>
+                        Checkout{" "}
+                        <a
+                            href="https://github.com/cynthiacodes/c7c5-study-resource-catalog-frontend"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            frontend repo
+                        </a>{" "}
+                        and{" "}
+                        <a
+                            href="https://github.com/cynthiacodes/c7c5-study-resource-catalog-backend"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            backend repo
+                        </a>{" "}
+                        here!
+                    </Text>
+                </Text>
             </Container>
         </Container>
     );

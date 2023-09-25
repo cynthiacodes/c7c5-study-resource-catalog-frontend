@@ -1,6 +1,6 @@
 import { Button, Container, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { Resource, User } from "./Interfaces";
+import { Resource, User } from "../utilities/Interfaces";
 import { ResourceCard } from "./ResourceCard";
 
 interface StudylistViewProp {
@@ -27,15 +27,15 @@ export function Studylist({
             pb={"5rem"}
         >
             <Text fontSize={"2xl"} textAlign={"center"}>
-                {currentUser?.name}'s' study list
+                {currentUser?.name}'s study list
                 <Button ml="1rem">
                     <Link to={"/"}>Home</Link>
                 </Button>
             </Text>
             <ResourceCard
-                allResources={studyListData} // takes users study list array
-                singleResource={singleResource} // stays as it is
-                setSingleResource={setSingleResource} // stays as it is
+                allResources={studyListData}
+                singleResource={singleResource}
+                setSingleResource={setSingleResource}
             />
         </Container>
     );

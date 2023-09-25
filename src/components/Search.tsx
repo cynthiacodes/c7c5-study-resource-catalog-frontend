@@ -1,7 +1,7 @@
 import { Box, Button, Input } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { filterResourceBySearchInput } from "../utilities/filterResultsBySearchText";
-import { Resource } from "./Interfaces";
+import { Resource } from "../utilities/Interfaces";
 
 interface searchViewProps {
     setFilteredResourcesArray: React.Dispatch<React.SetStateAction<Resource[]>>;
