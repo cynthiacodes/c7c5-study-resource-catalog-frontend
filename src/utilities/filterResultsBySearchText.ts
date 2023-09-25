@@ -1,4 +1,4 @@
-import { Resource } from "../components/Interfaces";
+import { Resource } from "./Interfaces";
 
 export const filterResourceBySearchInput = (
     searchText: string,

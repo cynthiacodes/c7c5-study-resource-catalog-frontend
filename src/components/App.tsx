@@ -1,15 +1,14 @@
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
-import { LandingPage } from "./LandingPage";
-import { AddNewResource } from "./AddNewResource";
-import { useEffect, useState } from "react";
-import { Resource, User } from "./Interfaces";
-import { DetailedResourceCard } from "./DetailedResourceCard";
-import { fetchAllUsers } from "../utilities/fetchAllUsers";
-import { Studylist } from "./Studylist";
-import { fetchAllResources } from "../utilities/fetchAllResources";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Resource, User } from "../utilities/Interfaces";
 import { baseURL } from "../utilities/baseURL";
+import { fetchAllResources } from "../utilities/fetchAllResources";
+import { fetchAllUsers } from "../utilities/fetchAllUsers";
+import { AddNewResource } from "./AddNewResource";
+import { DetailedResourceCard } from "./DetailedResourceCard";
+import { LandingPage } from "./LandingPage";
+import { Studylist } from "./Studylist";
 
 function App() {
     const [currentUser, setCurrentUser] = useState<User | null>();

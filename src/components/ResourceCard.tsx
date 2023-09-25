@@ -11,7 +11,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import { Navigate } from "react-router-dom";
-import { Resource } from "./Interfaces";
+import { Resource } from "../utilities/Interfaces";
 
 interface ResourceCardViewProps {
     allResources: Resource[];
@@ -28,7 +28,6 @@ export function ResourceCard({
 }: ResourceCardViewProps): JSX.Element {
     const handleViewMore = (resource: Resource) => {
         setSingleResource(resource);
-        console.log(resource.resource_id);
     };
 
     return (
