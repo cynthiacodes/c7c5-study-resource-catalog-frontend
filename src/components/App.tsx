@@ -22,7 +22,12 @@ function App() {
     }, []);
     useEffect(() => {
         fetchAllResources().then((allResourceFromDB) =>
-            setAllResources(allResourceFromDB)
+            setAllResources(
+                allResourceFromDB.map((resource: Resource) => ({
+                    ...resource,
+                    checked: false,
+                }))
+            )
         );
     }, []);
 
@@ -79,7 +84,12 @@ function App() {
                 />
                 <Route
                     path="/newresource"
-                    element={<AddNewResource currentUser={currentUser} />}
+                    element={
+                        <AddNewResource
+                            currentUser={currentUser}
+                            setAllResources={setAllResources}
+                        />
+                    }
                 />
             </Routes>
         </div>

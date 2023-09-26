@@ -12,7 +12,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Resource, User } from "../utilities/Interfaces";
 import { baseURL } from "../utilities/baseURL";
@@ -38,8 +38,6 @@ export function DetailedResourceCard({
     users,
     fetchStudyList,
 }: DetailedResourceCardViewProps): JSX.Element {
-    const [isChecked, setIsChecked] = useState<boolean>(true);
-
     const handleCloseView = () => {
         setSingleResource(null);
     };
@@ -68,13 +66,22 @@ export function DetailedResourceCard({
             console.error(error);
         }
     };
+
     const handleAddAndDeleteFromStudyList = () => {
-        setIsChecked(!isChecked);
-        if (isChecked) {
-            handleAddToStudyList();
-        } else {
+        updateCheckStatus();
+        if (singleResource?.checked === false) {
             handleDeleteFromStudyList();
+        } else {
+            handleAddToStudyList();
         }
+    };
+
+    const updateCheckStatus = () => {
+        if (!singleResource) return;
+        setSingleResource({
+            ...singleResource,
+            checked: !singleResource.checked,
+        });
     };
 
     const handleLikeDislike = async (likeOrDislike: string) => {
@@ -106,7 +113,7 @@ export function DetailedResourceCard({
         fetchStudyList().then((data) => {
             setStudyListData(data);
         });
-    }, [fetchStudyList, isChecked, setStudyListData]);
+    }, [fetchStudyList, singleResource?.checked, setStudyListData]);
 
     function getCreatorName(user_id: number | undefined): string | undefined {
         const creator = users.find((user) => user.user_id === user_id);
@@ -173,7 +180,7 @@ export function DetailedResourceCard({
                                 </Button>
 
                                 <Checkbox
-                                    isChecked={!isChecked}
+                                    isChecked={!singleResource?.checked}
                                     onChange={() =>
                                         handleAddAndDeleteFromStudyList()
                                     }

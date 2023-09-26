@@ -11,6 +11,7 @@ export interface Resource {
     user_id: number;
     creator_opinion: string;
     creator_reason: string;
+    checked: boolean;
 }
 
 export interface User {

@@ -9,7 +9,7 @@ import {
     Select,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import {
     contentTypeArray,
@@ -17,14 +17,19 @@ import {
     stageArray,
     tagsArray,
 } from "../utilities/AddNewResourcesSelectOptions";
-import { NewResource, User } from "../utilities/Interfaces";
+import { NewResource, Resource, User } from "../utilities/Interfaces";
 import { baseURL } from "../utilities/baseURL";
+import { fetchAllResources } from "../utilities/fetchAllResources";
 
 interface currentUserProps {
     currentUser: User | null | undefined;
+    setAllResources: React.Dispatch<React.SetStateAction<Resource[]>>;
 }
 
-export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
+export function AddNewResource({
+    currentUser,
+    setAllResources,
+}: currentUserProps): JSX.Element {
     const [submitted, setSubmitted] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [resourceData, setResourceData] = useState<NewResource>({
@@ -53,7 +58,18 @@ export function AddNewResource({ currentUser }: currentUserProps): JSX.Element {
             console.error(error);
             setIsLoading(false);
         }
+        setSubmitted(false);
     }
+    useEffect(() => {
+        fetchAllResources().then((allResourceFromDB) =>
+            setAllResources(
+                allResourceFromDB.map((resource: Resource) => ({
+                    ...resource,
+                    checked: false,
+                }))
+            )
+        );
+    }, [setAllResources, submitted]);
     function handleResourceInput(e: React.ChangeEvent<HTMLInputElement>) {
         const value = e.target.value;
 
